@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: p2p-deployment-transport-deployment
+spec:
+  replicas: 1  # ✅ Correct placement here
+  selector:
+    matchLabels:
+      app: p2p-transport
+  template:
+    metadata:
+      labels:
+        app: p2p-transport
+    spec:
+      containers:
+        - name: p2p-transport
+          image: premchand1/p2p-transport:1.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-service:5432/p2p_transport"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "postgres"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "postgres"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-service:9092"
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis-service"
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: p2p-transport-service
+spec:
+  selector:
+    app: p2p-transport
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
