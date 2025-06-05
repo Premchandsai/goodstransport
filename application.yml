@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/p2p_transport}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+    consumer:
+      group-id: p2p-transport-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    admin:
+      auto-create: true
+      properties:
+        replication.factor: 1
+        num.partitions: 1
+     # 👈 Fix to avoid InvalidReplicationFactorException
+
+  redis:
+    host: ${SPRING_REDIS_HOST:redis}
+    port: ${SPRING_REDIS_PORT:6379}
+
+  jwt:
+    secret: ${JWT_SECRET:iimxlU5IZxO+N4VaQVoVpKzTnE63eqCRyhm9UKcZirk=}
+    expirationMs: ${JWT_EXPIRATION_MS:86400000}
+    expiration: ${JWT_EXPIRATION:86400}
+
+  stripe:
+    secret-key: ${STRIPE_APIKEY:sk_test_51R1M3g2Ns2l2ACyblnQhx8Xwi8bYTWnaHFNOdVuDzoXeb0RvNlIgp2wI1Rs348CBFyn56X8p4WSNAAi7xPKxPqo000QErvS7GN}
+
+kafka:
+  topic:
+    notifications: ${KAFKA_TOPIC_NOTIFICATIONS:notifications-topic}
