@@ -5,25 +5,16 @@ name = "java"
 enabled = true
 
 [analyzers.meta]
+target = "."
 skip_files = [
-    "src/test/**",          # Skip test files to focus on production code
+    "src/test/**",          # Skip test files
     "build/**",             # Exclude Gradle build output
-    "target/**"             # Exclude any additional build artifacts
+    "target/**"             # Exclude Maven artifacts (in case any)
 ]
-max_file_size_bytes = 1000000     # Adjust for large Java files if needed
+max_file_size_bytes = 1000000
 enabled_linters = [
-    "checkstyle",                   # Enforce Java coding standards
-    "pmd",                         # Detect common Java issues (e.g., null pointers)
-    "spring",                      # Spring Boot-specific checks (REST controllers, dependency injection)
-    "security"                     # Security checks (e.g., SQL injection in JPA queries)
-]
-
-[[analyzers]]
-name = "sql"
-enabled = true
-
-[analyzers.meta]
-dialects = ["postgresql"]         # Optimize for PostgreSQL queries
-skip_files = [
-    "src/main/resources/db/migration/**"  # Skip database migration files (e.g., Flyway/Liquibase)
+    "checkstyle",           # Enforce Java code style
+    "pmd",                  # Detect common issues
+    "spring",               # Spring-specific best practices
+    "security"              # Security vulnerabilities
 ]
